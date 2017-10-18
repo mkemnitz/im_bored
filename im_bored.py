@@ -1,77 +1,72 @@
 import random
-# This is a program that will suggest activities to do when you're bored.
-print
-print "I heard you were bored."
-print
-print "I'm here to help!"
-print
-print "What is your name?"
 
-#Ask name
+def open_and_read_file(filename):
+    """Opens filename as a file object and returns list of contents."""
+    
+    file_class = open(filename)
+    file_list = file_class.read().split("\n")
+    file_class.close()
+    
+    return file_list
 
-name = raw_input(">>")
-
-print
-print "Hello {}! How old are you?".format(name)
-
-#Ask age
+def greet_user():
+    """Prints intro greeting"""
+    print
+    print "I heard you were bored."
+    print
+    print "I'm here to help!"
+    print
+    print "What is your age?"
+    print
+    
 
 def age_input(message):
-   try:
-      age = int(input(message))
+    """Forces user to enter number"""
+    try:
+      age = int(raw_input(message))
       return age
-   except:
+    except:
       return age_input("Enter a number: ")
 
-age = age_input("Enter age: ")
+def generate_suggestion():
+    """Generates suggestion based on user age"""
+    age = age_input("Enter age: ")
+    if age <= 5:
+        age_5_younger = open_and_read_file("age_5_younger.txt")
+        print "Why don't you {}?".format(random.choice(age_5_younger))
+        print
 
-print
-print "Ok, I see you are {} years old.".format(age)
-print
-print "I'm trying to think of something you might like to do..."
-print
+    elif (age > 5) and (age < 20):
+        age_5_to_20 = open_and_read_file("age_5_to_20.txt")
+        print "Why don't you {}?".format(random.choice(age_5_to_20))
+        print
 
-# Lists of activities by age
+    elif age >= 20:
+        age_20_plus = open_and_read_file("age_20_plus.txt")
+        print "Why don't you {}?".format(random.choice(age_20_plus))
+        print
+    
+def ask_to_continue():
+    """Ask user to continue"""
 
-age_5_younger = ["play with legos", "paint", "ride your scooter",
-                "read a picture book", "draw a picture of mommy"]
-age_5_to_20 = ["read a book", "paint a picture", "ride your bike", "jump rope",
-                "draw a picture of dragon"]
-age_20_plus = ["do some knitting", "paint with watercolors", "go for a bike ride", "yoga"]
+    bored = raw_input("Do you want another suggestion?(yes/no) ").lower()
 
-# Random choice of the lists of activiites by age
+    if bored == 'no':
+        print
+        print "Great have fun!"
+        return False
 
-rand_item5 = random.choice(age_5_younger)
-rand_item_5_to_20 = random.choice(age_5_to_20)
-rand_item_20 = random.choice(age_20_plus)
+    return True
+    
+def run_im_bored():
+    """Runs the i'm bored game"""
+    
+    greet_user()
+    
+    bored = True
+    
+    while bored:
+        generate_suggestion()
+        bored = ask_to_continue()
 
-#Determine which list to choose by age and provide to user
-
-if age <= 5:
-    print "Why don't you {}?".format(rand_item5)
-    # del age_5_younger
-    # print age_5_younger
-
-elif (age > 5) and (age < 20):
-    print "Why don't you {}?".format(rand_item_5_to_20)
-
-elif age >= 20:
-    print "Why don't you {}?".format(rand_item_20)
-
-print
-
-# Ask user if they like that option and if not, provide another
-
-user_still_bored = True
-
-while user_still_bored:
-    print "Do you like that option?  Type y or n"
-    user_likes = raw_input(">>")
-
-    if user_likes == "y":
-        print "Great, have fun!"
-        user_still_bored = False
-    elif user_likes == "n":
-        print "Ok let's give you another option"
-    else:
-        print "Please type y or n"
+run_im_bored()
